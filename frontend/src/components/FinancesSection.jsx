@@ -1,16 +1,17 @@
-import React from "react";
-import {
-  Building2,
-  Clock,
-  DollarSign,
-  BarChart3,
-  FileSpreadsheet,
+import React from 'react';
+import { 
+  Building2, 
+  Clock, 
+  DollarSign, 
+  BarChart3, 
+  FileSpreadsheet, 
   Flame,
-} from "lucide-react";
+  CreditCard 
+} from 'lucide-react';
 
 export default function FinancesSection() {
   return (
-    <section className="py-24 bg-gradient-to-b from-white to-[#faf9f7] border-t border-gray-100">
+    <section id="finances" className="py-24 bg-gradient-to-b from-white to-[#faf9f7] border-t border-gray-100 text-left">
       <div className="max-w-6xl mx-auto px-6">
         {/* Badge & Title */}
         <div className="max-w-2xl mb-14">
@@ -18,14 +19,10 @@ export default function FinancesSection() {
             Finances
           </span>
           <h2 className="text-3xl md:text-4xl font-extrabold text-gray-950 tracking-tight mb-4">
-            Simple finances for your
-            <br />
-            business that just works
+            Simple finances for your<br />business that just works
           </h2>
           <p className="text-gray-600 text-base leading-relaxed">
-            Understand your business with auto-generated reports for
-            non-financial. Simple, intuitive and just the right information so
-            you don't get overwhelmed.
+            Understand your business with auto-generated double-entry accounting reports. Simple, intuitive, and mathematically balanced with zero-sum validation.
           </p>
         </div>
 
@@ -37,52 +34,23 @@ export default function FinancesSection() {
             <div className="mb-6">
               <div className="flex items-center justify-between text-xs mb-3">
                 <span className="font-semibold text-gray-900 flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-blue-500"></span>{" "}
-                  Revenue over expense
+                  <span className="w-2 h-2 rounded-full bg-blue-500"></span> Revenue over expense
                 </span>
                 <span className="text-gray-400">This year</span>
               </div>
 
               {/* SVG Curve Chart */}
               <div className="w-full h-32 relative">
-                <svg
-                  className="w-full h-full"
-                  viewBox="0 0 400 120"
-                  preserveAspectRatio="none"
-                >
+                <svg className="w-full h-full" viewBox="0 0 400 120" preserveAspectRatio="none">
                   <defs>
-                    <linearGradient
-                      id="chartGradient"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
+                    <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.3" />
-                      <stop
-                        offset="100%"
-                        stopColor="#38bdf8"
-                        stopOpacity="0.0"
-                      />
+                      <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.0" />
                     </linearGradient>
                   </defs>
                   {/* Grid lines */}
-                  <line
-                    x1="0"
-                    y1="30"
-                    x2="400"
-                    y2="30"
-                    stroke="#edece9"
-                    strokeDasharray="3 3"
-                  />
-                  <line
-                    x1="0"
-                    y1="70"
-                    x2="400"
-                    y2="70"
-                    stroke="#edece9"
-                    strokeDasharray="3 3"
-                  />
+                  <line x1="0" y1="30" x2="400" y2="30" stroke="#edece9" strokeDasharray="3 3" />
+                  <line x1="0" y1="70" x2="400" y2="70" stroke="#edece9" strokeDasharray="3 3" />
                   <line x1="0" y1="110" x2="400" y2="110" stroke="#edece9" />
 
                   {/* Area fill */}
@@ -108,18 +76,7 @@ export default function FinancesSection() {
                 </svg>
                 {/* Months axis */}
                 <div className="flex justify-between text-[10px] text-gray-400 mt-1">
-                  <span>Jan</span>
-                  <span>Feb</span>
-                  <span>Mar</span>
-                  <span>Apr</span>
-                  <span>May</span>
-                  <span>Jun</span>
-                  <span>Jul</span>
-                  <span>Aug</span>
-                  <span>Sep</span>
-                  <span>Oct</span>
-                  <span>Nov</span>
-                  <span>Dec</span>
+                  <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
                 </div>
               </div>
             </div>
@@ -130,36 +87,25 @@ export default function FinancesSection() {
               <div>
                 <div className="flex justify-between items-center mb-2">
                   <span className="font-bold text-gray-900 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>{" "}
-                    Revenue split
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Revenue split
                   </span>
                   <span className="text-[10px] text-gray-400">This year</span>
                 </div>
                 <div className="space-y-1.5">
                   {[
-                    { name: "Apple", pct: 60, barColor: "bg-black" },
-                    { name: "Twitter", pct: 20, barColor: "bg-blue-400" },
-                    { name: "Figma", pct: 10, barColor: "bg-purple-400" },
-                    { name: "Spotify", pct: 5, barColor: "bg-emerald-400" },
-                    { name: "Airtable", pct: 5, barColor: "bg-amber-400" },
-                    { name: "Netflix", pct: 5, barColor: "bg-red-500" },
+                    { name: 'Apple', pct: 60, barColor: 'bg-black' },
+                    { name: 'Twitter', pct: 20, barColor: 'bg-blue-400' },
+                    { name: 'Figma', pct: 10, barColor: 'bg-purple-400' },
+                    { name: 'Spotify', pct: 5, barColor: 'bg-emerald-400' },
+                    { name: 'Airtable', pct: 5, barColor: 'bg-amber-400' },
+                    { name: 'Netflix', pct: 5, barColor: 'bg-red-500' },
                   ].map((item, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center justify-between text-[11px]"
-                    >
-                      <span className="text-gray-600 font-medium truncate w-16">
-                        {item.name}
-                      </span>
+                    <div key={i} className="flex items-center justify-between text-[11px]">
+                      <span className="text-gray-600 font-medium truncate w-16">{item.name}</span>
                       <div className="flex-1 mx-2 bg-gray-200 h-1.5 rounded-full overflow-hidden">
-                        <div
-                          className={`h-full ${item.barColor} rounded-full`}
-                          style={{ width: `${item.pct}%` }}
-                        ></div>
+                        <div className={`h-full ${item.barColor} rounded-full`} style={{ width: `${item.pct}%` }}></div>
                       </div>
-                      <span className="text-gray-900 font-bold font-mono">
-                        {item.pct}%
-                      </span>
+                      <span className="text-gray-900 font-bold font-mono">{item.pct}%</span>
                     </div>
                   ))}
                 </div>
@@ -169,36 +115,25 @@ export default function FinancesSection() {
               <div>
                 <div className="flex justify-between items-center mb-2">
                   <span className="font-bold text-gray-900 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>{" "}
-                    Expenses split
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span> Expenses split
                   </span>
                   <span className="text-[10px] text-gray-400">This year</span>
                 </div>
                 <div className="space-y-1.5">
                   {[
-                    { name: "Payroll", pct: 50, barColor: "bg-red-400" },
-                    { name: "Rent", pct: 15, barColor: "bg-orange-400" },
-                    { name: "Assets", pct: 5, barColor: "bg-amber-400" },
-                    { name: "Travel", pct: 5, barColor: "bg-yellow-400" },
-                    { name: "Accounting", pct: 5, barColor: "bg-gray-400" },
-                    { name: "Software", pct: 1, barColor: "bg-indigo-400" },
+                    { name: 'Payroll', pct: 50, barColor: 'bg-red-400' },
+                    { name: 'Rent', pct: 15, barColor: 'bg-orange-400' },
+                    { name: 'Assets', pct: 5, barColor: 'bg-amber-400' },
+                    { name: 'Travel', pct: 5, barColor: 'bg-yellow-400' },
+                    { name: 'Accounting', pct: 5, barColor: 'bg-gray-400' },
+                    { name: 'Software', pct: 1, barColor: 'bg-indigo-400' },
                   ].map((item, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center justify-between text-[11px]"
-                    >
-                      <span className="text-gray-600 font-medium truncate w-16">
-                        {item.name}
-                      </span>
+                    <div key={i} className="flex items-center justify-between text-[11px]">
+                      <span className="text-gray-600 font-medium truncate w-16">{item.name}</span>
                       <div className="flex-1 mx-2 bg-gray-200 h-1.5 rounded-full overflow-hidden">
-                        <div
-                          className={`h-full ${item.barColor} rounded-full`}
-                          style={{ width: `${item.pct}%` }}
-                        ></div>
+                        <div className={`h-full ${item.barColor} rounded-full`} style={{ width: `${item.pct}%` }}></div>
                       </div>
-                      <span className="text-gray-900 font-bold font-mono">
-                        {item.pct}%
-                      </span>
+                      <span className="text-gray-900 font-bold font-mono">{item.pct}%</span>
                     </div>
                   ))}
                 </div>
@@ -206,123 +141,49 @@ export default function FinancesSection() {
             </div>
           </div>
 
-          {/* Right: Notion Transactions Table */}
+          {/* Right: Transactions Table */}
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden text-xs shadow-sm flex flex-col justify-between">
             <div>
               <div className="p-3 bg-[#f7f6f3] border-b border-gray-200 flex items-center justify-between">
                 <span className="font-bold text-gray-900 flex items-center gap-1.5">
-                  <span>💳</span> Transactions
+                  <CreditCard className="w-4 h-4 text-purple-600" /> Transactions
                 </span>
-                <span className="text-[11px] text-gray-400">
-                  Notion Database
-                </span>
+                <span className="text-[11px] text-gray-400 font-mono">Ledger Database</span>
               </div>
 
               <table className="w-full text-left">
                 <thead className="bg-[#faf9f7] border-b border-gray-200 text-gray-500 text-[11px]">
                   <tr>
                     <th className="p-2.5 font-medium">Date</th>
-                    <th className="p-2.5 font-medium">Aa Transaction</th>
+                    <th className="p-2.5 font-medium">Transaction</th>
                     <th className="p-2.5 font-medium">Category</th>
                     <th className="p-2.5 font-medium text-right">Total</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {[
-                    {
-                      date: "June 30, 2023",
-                      name: "Apple Transfer",
-                      cat: "Revenue",
-                      catColor: "bg-blue-50 text-blue-700",
-                      amt: "€11,460.00",
-                      pos: true,
-                    },
-                    {
-                      date: "June 23, 2023",
-                      name: "Uber",
-                      cat: "Travel",
-                      catColor: "bg-orange-50 text-orange-700",
-                      amt: "-€40.00",
-                      pos: false,
-                    },
-                    {
-                      date: "June 22, 2023",
-                      name: "Accountant May",
-                      cat: "Accounting",
-                      catColor: "bg-purple-50 text-purple-700",
-                      amt: "-€345.00",
-                      pos: false,
-                    },
-                    {
-                      date: "June 22, 2023",
-                      name: "Phone",
-                      cat: "Utilities",
-                      catColor: "bg-yellow-50 text-yellow-700",
-                      amt: "-€345.00",
-                      pos: false,
-                    },
-                    {
-                      date: "June 20, 2023",
-                      name: "Google Workspace",
-                      cat: "Software",
-                      catColor: "bg-indigo-50 text-indigo-700",
-                      amt: "-€345.00",
-                      pos: false,
-                    },
-                    {
-                      date: "June 20, 2023",
-                      name: "Superhuman",
-                      cat: "Software",
-                      catColor: "bg-indigo-50 text-indigo-700",
-                      amt: "-€30.00",
-                      pos: false,
-                    },
-                    {
-                      date: "June 19, 2023",
-                      name: "Slack",
-                      cat: "Software",
-                      catColor: "bg-indigo-50 text-indigo-700",
-                      amt: "-€80.00",
-                      pos: false,
-                    },
-                    {
-                      date: "June 15, 2023",
-                      name: "WeWork Rent",
-                      cat: "Rent",
-                      catColor: "bg-red-50 text-red-700",
-                      amt: "-€1,150.00",
-                      pos: false,
-                    },
-                    {
-                      date: "June 14, 2023",
-                      name: "Payroll Jon Doe",
-                      cat: "Payroll",
-                      catColor: "bg-rose-50 text-rose-700",
-                      amt: "-€5,980.00",
-                      pos: false,
-                    },
+                    { date: 'June 30, 2023', name: 'Apple Transfer', cat: 'Revenue', catColor: 'bg-blue-50 text-blue-700', amt: '€11,460.00', pos: true },
+                    { date: 'June 23, 2023', name: 'Uber Travel', cat: 'Travel', catColor: 'bg-orange-50 text-orange-700', amt: '-€40.00', pos: false },
+                    { date: 'June 22, 2023', name: 'Accountant May', cat: 'Accounting', catColor: 'bg-purple-50 text-purple-700', amt: '-€345.00', pos: false },
+                    { date: 'June 22, 2023', name: 'Phone Bill', cat: 'Utilities', catColor: 'bg-yellow-50 text-yellow-700', amt: '-€345.00', pos: false },
+                    { date: 'June 20, 2023', name: 'Google Workspace', cat: 'Software', catColor: 'bg-indigo-50 text-indigo-700', amt: '-€345.00', pos: false },
+                    { date: 'June 20, 2023', name: 'Superhuman Mail', cat: 'Software', catColor: 'bg-indigo-50 text-indigo-700', amt: '-€30.00', pos: false },
+                    { date: 'June 19, 2023', name: 'Slack Tech', cat: 'Software', catColor: 'bg-indigo-50 text-indigo-700', amt: '-€80.00', pos: false },
+                    { date: 'June 15, 2023', name: 'WeWork Rent', cat: 'Rent', catColor: 'bg-red-50 text-red-700', amt: '-€1,150.00', pos: false },
+                    { date: 'June 14, 2023', name: 'Payroll Jon Doe', cat: 'Payroll', catColor: 'bg-rose-50 text-rose-700', amt: '-€5,980.00', pos: false },
                   ].map((row, idx) => (
-                    <tr
-                      key={idx}
-                      className="hover:bg-gray-50 transition-colors"
-                    >
-                      <td className="p-2 text-gray-500 text-[11px] whitespace-nowrap">
-                        {row.date}
-                      </td>
-                      <td className="p-2 font-medium text-gray-900 flex items-center gap-1">
+                    <tr key={idx} className="hover:bg-gray-50 transition-colors">
+                      <td className="p-2 text-gray-500 text-[11px] whitespace-nowrap">{row.date}</td>
+                      <td className="p-2 font-medium text-gray-900 flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
                         {row.name}
                       </td>
                       <td className="p-2">
-                        <span
-                          className={`px-2 py-0.5 rounded text-[10px] font-semibold ${row.catColor}`}
-                        >
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-semibold ${row.catColor}`}>
                           {row.cat}
                         </span>
                       </td>
-                      <td
-                        className={`p-2 text-right font-mono font-bold ${row.pos ? "text-emerald-600" : "text-gray-800"}`}
-                      >
+                      <td className={`p-2 text-right font-mono font-bold ${row.pos ? 'text-emerald-600' : 'text-gray-800'}`}>
                         {row.amt}
                       </td>
                     </tr>
@@ -332,7 +193,7 @@ export default function FinancesSection() {
             </div>
 
             <div className="p-3 bg-[#faf9f7] border-t border-gray-200 text-[11px] text-gray-500 flex justify-between font-mono">
-              <span>Calculate: 9 transactions</span>
+              <span>9 Ledger transactions</span>
               <span className="font-bold text-gray-900">Net: +€3,891.00</span>
             </div>
           </div>
@@ -345,11 +206,9 @@ export default function FinancesSection() {
               <Building2 className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="font-bold text-gray-900 text-sm mb-1">
-                Bank connection
-              </h4>
+              <h4 className="font-bold text-gray-900 text-sm mb-1">Bank connection</h4>
               <p className="text-xs text-gray-600 leading-relaxed">
-                Connect your bank account to get balance and transactions data.
+                Connect your banking feed to get live balance and transaction sync.
               </p>
             </div>
           </div>
@@ -361,7 +220,7 @@ export default function FinancesSection() {
             <div>
               <h4 className="font-bold text-gray-900 text-sm mb-1">Runway</h4>
               <p className="text-xs text-gray-600 leading-relaxed">
-                Know how far your business will go and make decisions.
+                Accurately forecast cash runway and make informed decisions.
               </p>
             </div>
           </div>
@@ -371,11 +230,9 @@ export default function FinancesSection() {
               <DollarSign className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="font-bold text-gray-900 text-sm mb-1">
-                Updated balance
-              </h4>
+              <h4 className="font-bold text-gray-900 text-sm mb-1">Updated balance</h4>
               <p className="text-xs text-gray-600 leading-relaxed">
-                Get daily balance updates from your accounts right into Notion.
+                Get real-time running balance updates across your entire Chart of Accounts.
               </p>
             </div>
           </div>
@@ -385,11 +242,9 @@ export default function FinancesSection() {
               <BarChart3 className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="font-bold text-gray-900 text-sm mb-1">
-                Essential reports
-              </h4>
+              <h4 className="font-bold text-gray-900 text-sm mb-1">Essential reports</h4>
               <p className="text-xs text-gray-600 leading-relaxed">
-                Control you revenues and expenses with human-readable charts.
+                Pre-aggregated MongoDB pipelines for monthly P&L and balance sheets.
               </p>
             </div>
           </div>
@@ -399,11 +254,9 @@ export default function FinancesSection() {
               <FileSpreadsheet className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="font-bold text-gray-900 text-sm mb-1">
-                Profit & Loss
-              </h4>
+              <h4 className="font-bold text-gray-900 text-sm mb-1">Profit & Loss</h4>
               <p className="text-xs text-gray-600 leading-relaxed">
-                Your margins and unit economics updated in real-time.
+                Track gross revenue, operating costs, and margins in real-time.
               </p>
             </div>
           </div>
@@ -413,11 +266,9 @@ export default function FinancesSection() {
               <Flame className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="font-bold text-gray-900 text-sm mb-1">
-                Expense tracking
-              </h4>
+              <h4 className="font-bold text-gray-900 text-sm mb-1">Expense tracking</h4>
               <p className="text-xs text-gray-600 leading-relaxed">
-                Categorize and visualize your expenses by its importance.
+                Categorize and visualize your spending breakdown by department.
               </p>
             </div>
           </div>

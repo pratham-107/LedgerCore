@@ -3,8 +3,6 @@ import {
   X, 
   Plus, 
   RotateCcw, 
-  ArrowUpRight, 
-  ArrowDownLeft, 
   DollarSign, 
   TrendingUp, 
   FileText, 
@@ -14,7 +12,14 @@ import {
   AlertCircle,
   Building2,
   Lock,
-  UserCheck
+  UserCheck,
+  BarChart3,
+  CreditCard,
+  PlusCircle,
+  Landmark,
+  FileSpreadsheet,
+  Scale,
+  Layers
 } from 'lucide-react';
 import { api } from '../services/api';
 
@@ -158,10 +163,10 @@ export default function LiveAppModal({ isOpen, onClose }) {
         {/* Top Header Bar */}
         <div className="h-14 bg-[#faf9f7] border-b border-gray-200 px-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-5 h-5 rounded-full border-2 border-black flex items-center justify-center">
-              <div className="w-1.5 h-1.5 rounded-full bg-black"></div>
+            <div className="w-6 h-6 rounded-lg bg-black text-white flex items-center justify-center shadow-sm">
+              <Layers className="w-3.5 h-3.5" />
             </div>
-            <span className="font-bold text-sm tracking-tight text-gray-900">LedgerCore Engine</span>
+            <span className="font-bold text-sm tracking-tight text-gray-900">LedgerCore Control Plane</span>
             <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
               Live Connected
@@ -171,7 +176,7 @@ export default function LiveAppModal({ isOpen, onClose }) {
           {/* Role switcher & Close */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5 bg-white border border-gray-200 px-2 py-1 rounded-lg text-xs">
-              <span className="text-gray-400 font-medium">Role:</span>
+              <span className="text-gray-400 font-medium">RBAC Role:</span>
               <select
                 value={userRole}
                 onChange={(e) => setUserRole(e.target.value)}
@@ -184,7 +189,7 @@ export default function LiveAppModal({ isOpen, onClose }) {
             </div>
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-black transition-colors"
+              className="w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-black transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -204,7 +209,7 @@ export default function LiveAppModal({ isOpen, onClose }) {
         {/* Main Body */}
         <div className="flex-1 flex overflow-hidden">
           {/* Left Navigation Tabs */}
-          <nav className="w-52 bg-[#f7f6f3] border-r border-gray-200 p-3 flex flex-col justify-between text-xs">
+          <nav className="w-56 bg-[#f7f6f3] border-r border-gray-200 p-3 flex flex-col justify-between text-xs">
             <div className="space-y-1">
               <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-2 py-1">Workspace</div>
               
@@ -214,7 +219,8 @@ export default function LiveAppModal({ isOpen, onClose }) {
                   tab === 'dashboard' ? 'bg-[#e8e7e3] text-gray-900 font-bold' : 'text-gray-600 hover:bg-[#efedea]'
                 }`}
               >
-                <span>📊</span> Dashboard
+                <BarChart3 className="w-3.5 h-3.5 text-blue-600" />
+                <span>Dashboard</span>
               </button>
 
               <button
@@ -223,7 +229,8 @@ export default function LiveAppModal({ isOpen, onClose }) {
                   tab === 'transactions' ? 'bg-[#e8e7e3] text-gray-900 font-bold' : 'text-gray-600 hover:bg-[#efedea]'
                 }`}
               >
-                <span>💳</span> Transactions
+                <CreditCard className="w-3.5 h-3.5 text-purple-600" />
+                <span>Transactions</span>
               </button>
 
               <button
@@ -234,7 +241,8 @@ export default function LiveAppModal({ isOpen, onClose }) {
                   tab === 'new-txn' ? 'bg-[#e8e7e3] text-gray-900 font-bold' : 'text-gray-600 hover:bg-[#efedea]'
                 }`}
               >
-                <span>➕</span> Record Transaction
+                <PlusCircle className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Record Transaction</span>
               </button>
 
               <button
@@ -243,7 +251,8 @@ export default function LiveAppModal({ isOpen, onClose }) {
                   tab === 'accounts' ? 'bg-[#e8e7e3] text-gray-900 font-bold' : 'text-gray-600 hover:bg-[#efedea]'
                 }`}
               >
-                <span>🏦</span> Chart of Accounts
+                <Landmark className="w-3.5 h-3.5 text-amber-600" />
+                <span>Chart of Accounts</span>
               </button>
 
               <button
@@ -254,14 +263,15 @@ export default function LiveAppModal({ isOpen, onClose }) {
                   tab === 'import' ? 'bg-[#e8e7e3] text-gray-900 font-bold' : 'text-gray-600 hover:bg-[#efedea]'
                 }`}
               >
-                <span>📑</span> CSV Batch Import
+                <FileSpreadsheet className="w-3.5 h-3.5 text-indigo-600" />
+                <span>CSV Batch Ingestion</span>
               </button>
             </div>
 
-            <div className="p-2 bg-white rounded-lg border border-gray-200 text-[11px] text-gray-500">
-              <div className="font-semibold text-gray-900 mb-1">Backend API</div>
+            <div className="p-2.5 bg-white rounded-lg border border-gray-200 text-[11px] text-gray-500">
+              <div className="font-semibold text-gray-900 mb-0.5">LedgerCore Engine</div>
               <div className="text-[10px] text-gray-400">Spring Boot 3.2 + MongoDB</div>
-              <div className="text-[10px] text-emerald-600 font-mono mt-0.5">ACID Transactions</div>
+              <div className="text-[10px] text-emerald-600 font-mono mt-0.5 font-semibold">ACID Double-Entry</div>
             </div>
           </nav>
 
@@ -272,12 +282,12 @@ export default function LiveAppModal({ isOpen, onClose }) {
             {tab === 'dashboard' && (
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-bold text-gray-900">Financial Snapshot</h3>
+                  <h3 className="text-xl font-bold text-gray-900">Financial Performance Overview</h3>
                   <button
                     onClick={() => setTab('new-txn')}
-                    className="bg-black hover:bg-gray-800 text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1"
+                    className="bg-black hover:bg-gray-800 text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1.5"
                   >
-                    <Plus className="w-3.5 h-3.5" /> New Transaction
+                    <Plus className="w-3.5 h-3.5" /> Post Transaction
                   </button>
                 </div>
 
@@ -318,7 +328,7 @@ export default function LiveAppModal({ isOpen, onClose }) {
                   <div className="border border-gray-200 rounded-xl p-5 bg-[#faf9f7]">
                     <div className="flex justify-between items-center mb-3">
                       <h4 className="font-bold text-sm text-gray-900 flex items-center gap-1.5">
-                        <span>📈</span> Monthly P&L Statement
+                        <TrendingUp className="w-4 h-4 text-emerald-600" /> Monthly Profit & Loss Statement
                       </h4>
                       <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">
                         Margin: {pnl?.margin || 51.28}%
@@ -345,7 +355,7 @@ export default function LiveAppModal({ isOpen, onClose }) {
                   <div className="border border-gray-200 rounded-xl p-5 bg-[#faf9f7]">
                     <div className="flex justify-between items-center mb-3">
                       <h4 className="font-bold text-sm text-gray-900 flex items-center gap-1.5">
-                        <span>⚖️</span> Balance Sheet Equation
+                        <Scale className="w-4 h-4 text-blue-600" /> Balance Sheet Invariant
                       </h4>
                       <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold">
                         Balanced: {balanceSheet?.balanced ? 'YES (0.00 Diff)' : 'YES'}
@@ -379,7 +389,7 @@ export default function LiveAppModal({ isOpen, onClose }) {
                   <h3 className="text-xl font-bold text-gray-900">Ledger Transactions</h3>
                   <button
                     onClick={() => setTab('new-txn')}
-                    className="bg-black text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1"
+                    className="bg-black text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1.5"
                   >
                     <Plus className="w-3.5 h-3.5" /> Post Transaction
                   </button>
@@ -654,7 +664,7 @@ export default function LiveAppModal({ isOpen, onClose }) {
                       />
                       <button
                         type="submit"
-                        className="bg-black text-white font-bold rounded p-2 hover:bg-gray-800 transition-colors"
+                        className="bg-black text-white font-bold rounded p-2 hover:bg-gray-800 transition-colors cursor-pointer"
                       >
                         + Create Account
                       </button>
