@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { 
   Building2, 
   Clock, 
@@ -14,7 +15,13 @@ export default function FinancesSection() {
     <section id="finances" className="py-24 bg-gradient-to-b from-white to-[#faf9f7] border-t border-gray-100 text-left">
       <div className="max-w-6xl mx-auto px-6">
         {/* Badge & Title */}
-        <div className="max-w-2xl mb-14">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.6 }}
+          className="max-w-2xl mb-14"
+        >
           <span className="text-orange-700 text-xs font-semibold uppercase tracking-wider bg-orange-50 px-2.5 py-1 rounded-full border border-orange-200/50 inline-block mb-3">
             Finances
           </span>
@@ -24,10 +31,16 @@ export default function FinancesSection() {
           <p className="text-gray-600 text-base leading-relaxed">
             Understand your business with auto-generated double-entry accounting reports. Simple, intuitive, and mathematically balanced with zero-sum validation.
           </p>
-        </div>
+        </motion.div>
 
         {/* Split Preview Mockup */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 bg-white p-4 md:p-8 rounded-2xl border border-gray-200/80 shadow-sm mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-6 bg-white p-4 md:p-8 rounded-2xl border border-gray-200/80 shadow-sm mb-16"
+        >
           {/* Left: Financial Breakdown & Chart */}
           <div className="bg-[#faf9f7] rounded-xl border border-gray-200 p-6 flex flex-col justify-between">
             {/* Chart Area */}
@@ -58,15 +71,23 @@ export default function FinancesSection() {
                     d="M 0 90 Q 50 100 100 80 T 200 45 T 300 30 T 400 20 L 400 110 L 0 110 Z"
                     fill="url(#chartGradient)"
                   />
-                  {/* Revenue Curve */}
-                  <path
+                  {/* Revenue Curve with drawing animation */}
+                  <motion.path
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    whileInView={{ pathLength: 1, opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.5, ease: "easeInOut" }}
                     d="M 0 90 Q 50 100 100 80 T 200 45 T 300 30 T 400 20"
                     fill="none"
                     stroke="#0284c7"
                     strokeWidth="2.5"
                   />
-                  {/* Expense Curve */}
-                  <path
+                  {/* Expense Curve with drawing animation */}
+                  <motion.path
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    whileInView={{ pathLength: 1, opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.5, delay: 0.3, ease: "easeInOut" }}
                     d="M 0 95 Q 50 85 100 90 T 200 80 T 300 70 T 400 65"
                     fill="none"
                     stroke="#f43f5e"
@@ -103,7 +124,13 @@ export default function FinancesSection() {
                     <div key={i} className="flex items-center justify-between text-[11px]">
                       <span className="text-gray-600 font-medium truncate w-16">{item.name}</span>
                       <div className="flex-1 mx-2 bg-gray-200 h-1.5 rounded-full overflow-hidden">
-                        <div className={`h-full ${item.barColor} rounded-full`} style={{ width: `${item.pct}%` }}></div>
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          whileInView={{ width: `${item.pct}%` }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.8, delay: i * 0.05 }}
+                          className={`h-full ${item.barColor} rounded-full`}
+                        ></motion.div>
                       </div>
                       <span className="text-gray-900 font-bold font-mono">{item.pct}%</span>
                     </div>
@@ -131,7 +158,13 @@ export default function FinancesSection() {
                     <div key={i} className="flex items-center justify-between text-[11px]">
                       <span className="text-gray-600 font-medium truncate w-16">{item.name}</span>
                       <div className="flex-1 mx-2 bg-gray-200 h-1.5 rounded-full overflow-hidden">
-                        <div className={`h-full ${item.barColor} rounded-full`} style={{ width: `${item.pct}%` }}></div>
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          whileInView={{ width: `${item.pct}%` }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.8, delay: i * 0.05 }}
+                          className={`h-full ${item.barColor} rounded-full`}
+                        ></motion.div>
                       </div>
                       <span className="text-gray-900 font-bold font-mono">{item.pct}%</span>
                     </div>
@@ -197,81 +230,71 @@ export default function FinancesSection() {
               <span className="font-bold text-gray-900">Net: +€3,891.00</span>
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* 6 Feature Grid items */}
+        {/* 6 Feature Grid items with stagger & hover spring */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div className="flex gap-4 items-start">
-            <div className="w-10 h-10 rounded-lg bg-orange-50 border border-orange-200/60 flex items-center justify-center shrink-0 text-orange-600">
-              <Building2 className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="font-bold text-gray-900 text-sm mb-1">Bank connection</h4>
-              <p className="text-xs text-gray-600 leading-relaxed">
-                Connect your banking feed to get live balance and transaction sync.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex gap-4 items-start">
-            <div className="w-10 h-10 rounded-lg bg-purple-50 border border-purple-200/60 flex items-center justify-center shrink-0 text-purple-600">
-              <Clock className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="font-bold text-gray-900 text-sm mb-1">Runway</h4>
-              <p className="text-xs text-gray-600 leading-relaxed">
-                Accurately forecast cash runway and make informed decisions.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex gap-4 items-start">
-            <div className="w-10 h-10 rounded-lg bg-red-50 border border-red-200/60 flex items-center justify-center shrink-0 text-red-600">
-              <DollarSign className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="font-bold text-gray-900 text-sm mb-1">Updated balance</h4>
-              <p className="text-xs text-gray-600 leading-relaxed">
-                Get real-time running balance updates across your entire Chart of Accounts.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex gap-4 items-start">
-            <div className="w-10 h-10 rounded-lg bg-blue-50 border border-blue-200/60 flex items-center justify-center shrink-0 text-blue-600">
-              <BarChart3 className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="font-bold text-gray-900 text-sm mb-1">Essential reports</h4>
-              <p className="text-xs text-gray-600 leading-relaxed">
-                Pre-aggregated MongoDB pipelines for monthly P&L and balance sheets.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex gap-4 items-start">
-            <div className="w-10 h-10 rounded-lg bg-rose-50 border border-rose-200/60 flex items-center justify-center shrink-0 text-rose-600">
-              <FileSpreadsheet className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="font-bold text-gray-900 text-sm mb-1">Profit & Loss</h4>
-              <p className="text-xs text-gray-600 leading-relaxed">
-                Track gross revenue, operating costs, and margins in real-time.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex gap-4 items-start">
-            <div className="w-10 h-10 rounded-lg bg-amber-50 border border-amber-200/60 flex items-center justify-center shrink-0 text-amber-600">
-              <Flame className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="font-bold text-gray-900 text-sm mb-1">Expense tracking</h4>
-              <p className="text-xs text-gray-600 leading-relaxed">
-                Categorize and visualize your spending breakdown by department.
-              </p>
-            </div>
-          </div>
+          {[
+            {
+              icon: Building2,
+              bg: 'bg-orange-50 border-orange-200/60 text-orange-600',
+              title: 'Bank connection',
+              desc: 'Connect your banking feed to get live balance and transaction sync.'
+            },
+            {
+              icon: Clock,
+              bg: 'bg-purple-50 border-purple-200/60 text-purple-600',
+              title: 'Runway',
+              desc: 'Accurately forecast cash runway and make informed decisions.'
+            },
+            {
+              icon: DollarSign,
+              bg: 'bg-red-50 border-red-200/60 text-red-600',
+              title: 'Updated balance',
+              desc: 'Get real-time running balance updates across your entire Chart of Accounts.'
+            },
+            {
+              icon: BarChart3,
+              bg: 'bg-blue-50 border-blue-200/60 text-blue-600',
+              title: 'Essential reports',
+              desc: 'Pre-aggregated MongoDB pipelines for monthly P&L and balance sheets.'
+            },
+            {
+              icon: FileSpreadsheet,
+              bg: 'bg-rose-50 border-rose-200/60 text-rose-600',
+              title: 'Profit & Loss',
+              desc: 'Track gross revenue, operating costs, and margins in real-time.'
+            },
+            {
+              icon: Flame,
+              bg: 'bg-amber-50 border-amber-200/60 text-amber-600',
+              title: 'Expense tracking',
+              desc: 'Categorize and visualize your spending breakdown by department.'
+            }
+          ].map((item, idx) => {
+            const Icon = item.icon;
+            return (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.5, delay: idx * 0.08 }}
+                whileHover={{ y: -3 }}
+                className="flex gap-4 items-start p-3 rounded-xl hover:bg-gray-50/80 transition-colors"
+              >
+                <div className={`w-10 h-10 rounded-lg border flex items-center justify-center shrink-0 ${item.bg}`}>
+                  <Icon className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 text-sm mb-1">{item.title}</h4>
+                  <p className="text-xs text-gray-600 leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
