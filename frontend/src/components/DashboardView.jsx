@@ -649,7 +649,7 @@ export default function DashboardView({ onBackToHome }) {
             <div className="max-w-3xl mx-auto space-y-6">
               <div>
                 <h1 className="text-2xl font-bold text-gray-950">Post Double-Entry Transaction</h1>
-                <p className="text-xs text-gray-500 mt-0.5">Enforces formal accounting zero-sum balancing ($\sum \text{Debits} = \sum \text{Credits}$).</p>
+                <p className="text-xs text-gray-500 mt-0.5">Enforces formal accounting zero-sum balancing (Sum of Debits = Sum of Credits).</p>
               </div>
 
               {!canPostTransactions && (
