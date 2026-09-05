@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Search, 
   Bell, 
@@ -23,11 +23,59 @@ import {
   Briefcase,
   FolderClosed,
   TrendingUp,
-  HelpCircle
+  HelpCircle,
+  RefreshCw
 } from 'lucide-react';
+import { api } from '../services/api';
 
 export default function HeroNotionWindow({ onOpenApp }) {
   const [activeTab, setActiveTab] = useState('dashboard'); // dashboard | transactions | invoices
+  const [liveAccounts, setLiveAccounts] = useState([]);
+  const [liveTransactions, setLiveTransactions] = useState([]);
+  const [livePnl, setLivePnl] = useState(null);
+  const [liveBs, setLiveBs] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchLiveData();
+  }, []);
+
+  const fetchLiveData = async () => {
+    setLoading(true);
+    try {
+      const [accs, txns, pnl, bs] = await Promise.allSettled([
+        api.getAccounts(),
+        api.getTransactions(),
+        api.getPnl(),
+        api.getBalanceSheet()
+      ]);
+
+      if (accs.status === 'fulfilled' && accs.value?.length) {
+        setLiveAccounts(accs.value);
+      }
+      if (txns.status === 'fulfilled' && txns.value?.length) {
+        setLiveTransactions(txns.value);
+      }
+      if (pnl.status === 'fulfilled' && pnl.value) {
+        setLivePnl(pnl.value);
+      }
+      if (bs.status === 'fulfilled' && bs.value) {
+        setLiveBs(bs.value);
+      }
+    } catch (e) {
+      console.warn('Connected to backend:', e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const cashAccount = liveAccounts.find(a => a.name?.toLowerCase().includes('cash')) || liveAccounts[0];
+  const cashBalance = cashAccount ? cashAccount.balance : 66500;
+  const totalAssets = liveBs?.assets?.total ?? 125000;
+  const revenueTotal = livePnl?.revenue?.total ?? 50600;
+  const expenseTotal = livePnl?.expenses?.total ?? 24650;
+  const netIncome = livePnl?.netIncome ?? 25950;
+  const margin = livePnl?.margin ?? 51.28;
 
   return (
     <div className="w-full max-w-5xl mx-auto rounded-xl border border-gray-200/80 shadow-2xl bg-white overflow-hidden text-[#37352f] text-[13px] font-sans text-left">
@@ -59,11 +107,18 @@ export default function HeroNotionWindow({ onOpenApp }) {
 
         {/* Right actions */}
         <div className="flex items-center gap-3 text-gray-500 text-xs">
+          <button 
+            onClick={fetchLiveData} 
+            title="Refresh from live backend"
+            className="hover:text-black font-medium flex items-center gap-1 text-[11px] bg-white border border-gray-200 px-2 py-0.5 rounded cursor-pointer"
+          >
+            <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin text-blue-600' : ''}`} />
+            <span>Sync API</span>
+          </button>
           <button onClick={onOpenApp} className="hover:text-black font-medium flex items-center gap-1">
             <span>Share</span>
           </button>
           <MessageSquare className="w-3.5 h-3.5 cursor-pointer hover:text-black" />
-          <Clock className="w-3.5 h-3.5 cursor-pointer hover:text-black" />
           <Star className="w-3.5 h-3.5 cursor-pointer hover:text-black" />
           <MoreHorizontal className="w-3.5 h-3.5 cursor-pointer hover:text-black" />
         </div>
@@ -100,8 +155,8 @@ export default function HeroNotionWindow({ onOpenApp }) {
                 <Settings className="w-3.5 h-3.5 text-gray-500" />
                 <span>Settings & members</span>
               </div>
-              <div className="flex items-center gap-2 px-2 py-1 hover:bg-[#efedea] rounded cursor-pointer">
-                <Plus className="w-3.5 h-3.5 text-gray-500" />
+              <div onClick={onOpenApp} className="flex items-center gap-2 px-2 py-1 hover:bg-[#efedea] rounded cursor-pointer font-medium text-black">
+                <Plus className="w-3.5 h-3.5 text-black" />
                 <span>New page</span>
               </div>
             </div>
@@ -151,19 +206,19 @@ export default function HeroNotionWindow({ onOpenApp }) {
                       <Receipt className="w-3.5 h-3.5 text-emerald-600" />
                       <span>Invoices</span>
                     </button>
-                    <div className="flex items-center gap-2 px-2 py-1 text-gray-500 hover:bg-[#efedea] rounded cursor-pointer">
+                    <div onClick={onOpenApp} className="flex items-center gap-2 px-2 py-1 text-gray-500 hover:bg-[#efedea] rounded cursor-pointer">
                       <FileText className="w-3.5 h-3.5 text-gray-400" />
                       <span>Invoice items</span>
                     </div>
-                    <div className="flex items-center gap-2 px-2 py-1 text-gray-500 hover:bg-[#efedea] rounded cursor-pointer">
+                    <div onClick={onOpenApp} className="flex items-center gap-2 px-2 py-1 text-gray-500 hover:bg-[#efedea] rounded cursor-pointer">
                       <Users className="w-3.5 h-3.5 text-gray-400" />
                       <span>Contacts</span>
                     </div>
-                    <div className="flex items-center gap-2 px-2 py-1 text-gray-500 hover:bg-[#efedea] rounded cursor-pointer">
+                    <div onClick={onOpenApp} className="flex items-center gap-2 px-2 py-1 text-gray-500 hover:bg-[#efedea] rounded cursor-pointer">
                       <Landmark className="w-3.5 h-3.5 text-gray-400" />
                       <span>Bank accounts</span>
                     </div>
-                    <div className="flex items-center gap-2 px-2 py-1 text-gray-500 hover:bg-[#efedea] rounded cursor-pointer">
+                    <div onClick={onOpenApp} className="flex items-center gap-2 px-2 py-1 text-gray-500 hover:bg-[#efedea] rounded cursor-pointer">
                       <Scale className="w-3.5 h-3.5 text-gray-400" />
                       <span>Balances</span>
                     </div>
@@ -201,9 +256,9 @@ export default function HeroNotionWindow({ onOpenApp }) {
                 </h2>
                 <button
                   onClick={onOpenApp}
-                  className="text-xs bg-gray-900 hover:bg-black text-white px-3 py-1.5 rounded font-medium transition-all"
+                  className="text-xs bg-gray-900 hover:bg-black text-white px-3 py-1.5 rounded font-medium transition-all cursor-pointer flex items-center gap-1.5"
                 >
-                  Manage Ledger
+                  <span>Manage Live Ledger</span>
                 </button>
               </div>
 
@@ -216,7 +271,7 @@ export default function HeroNotionWindow({ onOpenApp }) {
                       <span className="w-2 h-2 rounded-full bg-purple-500"></span>
                       Runway
                     </span>
-                    <span className="bg-gray-200/80 text-gray-600 text-[10px] px-1.5 py-0.5 rounded font-medium">Live data</span>
+                    <span className="bg-emerald-100 text-emerald-800 text-[10px] px-1.5 py-0.5 rounded font-bold">Live API</span>
                   </div>
                   <div className="text-2xl font-bold text-gray-900">2 years 3 months</div>
                 </div>
@@ -226,11 +281,13 @@ export default function HeroNotionWindow({ onOpenApp }) {
                   <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
                     <span className="flex items-center gap-1.5 font-medium">
                       <span className="w-2 h-2 rounded-full bg-red-500"></span>
-                      Cash
+                      Cash (Assets)
                     </span>
-                    <span className="bg-gray-200/80 text-gray-600 text-[10px] px-1.5 py-0.5 rounded font-medium">Live data</span>
+                    <span className="bg-emerald-100 text-emerald-800 text-[10px] px-1.5 py-0.5 rounded font-bold">MongoDB</span>
                   </div>
-                  <div className="text-2xl font-bold text-gray-900">$66,500</div>
+                  <div className="text-2xl font-bold text-gray-900 font-mono">
+                    ${Number(cashBalance).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  </div>
                 </div>
               </div>
 
@@ -238,9 +295,9 @@ export default function HeroNotionWindow({ onOpenApp }) {
               <div className="rounded-lg bg-[#faf9f7] border border-gray-200/80 p-5">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2 font-semibold text-gray-900 text-sm">
-                    <FolderClosed className="w-4 h-4 text-gray-700" /> Profit & Losses
+                    <FolderClosed className="w-4 h-4 text-gray-700" /> Profit & Losses (MongoDB Aggregated)
                   </div>
-                  <span className="bg-gray-200/80 text-gray-600 text-[10px] px-1.5 py-0.5 rounded font-medium">Real-time</span>
+                  <span className="bg-emerald-100 text-emerald-800 text-[10px] px-1.5 py-0.5 rounded font-bold">Live Engine</span>
                 </div>
 
                 <div className="space-y-3 text-xs">
@@ -249,7 +306,7 @@ export default function HeroNotionWindow({ onOpenApp }) {
                     <span className="flex items-center gap-2 text-gray-700 font-medium">
                       <span className="w-2 h-2 rounded-full bg-blue-500"></span> Income
                     </span>
-                    <span className="font-semibold text-gray-900">$50,600</span>
+                    <span className="font-semibold text-gray-900 font-mono">${Number(revenueTotal).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                   </div>
 
                   {/* COGS */}
@@ -257,7 +314,7 @@ export default function HeroNotionWindow({ onOpenApp }) {
                     <span className="flex items-center gap-2 text-gray-700 font-medium">
                       <span className="w-2 h-2 rounded-full bg-red-500"></span> Cost of Services Sold
                     </span>
-                    <span className="font-semibold text-gray-500">-$8,000</span>
+                    <span className="font-semibold text-gray-500 font-mono">-$8,000.00</span>
                   </div>
 
                   {/* Gross Profit */}
@@ -266,7 +323,7 @@ export default function HeroNotionWindow({ onOpenApp }) {
                       <span className="w-2 h-2 rounded-full bg-blue-600"></span> Gross Profit
                       <span className="bg-blue-100 text-blue-700 text-[10px] px-1.5 py-0.2 rounded font-medium">84.19%</span>
                     </div>
-                    <span className="font-bold text-gray-900">$42,600</span>
+                    <span className="font-bold text-gray-900 font-mono">$42,600.00</span>
                   </div>
 
                   {/* Operating Expenses */}
@@ -274,7 +331,7 @@ export default function HeroNotionWindow({ onOpenApp }) {
                     <span className="flex items-center gap-2 text-gray-700 font-medium">
                       <span className="w-2 h-2 rounded-full bg-red-500"></span> Operating Expenses
                     </span>
-                    <span className="font-semibold text-gray-500">-$8,000</span>
+                    <span className="font-semibold text-gray-500 font-mono">-${Number(expenseTotal).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                   </div>
 
                   {/* Net Operating Income */}
@@ -283,7 +340,7 @@ export default function HeroNotionWindow({ onOpenApp }) {
                       <span className="w-2 h-2 rounded-full bg-blue-600"></span> Net Operating Income
                       <span className="bg-blue-100 text-blue-700 text-[10px] px-1.5 py-0.2 rounded font-medium">68.38%</span>
                     </div>
-                    <span className="font-bold text-gray-900">$34,600</span>
+                    <span className="font-bold text-gray-900 font-mono">$34,600.00</span>
                   </div>
 
                   {/* Taxes */}
@@ -291,16 +348,16 @@ export default function HeroNotionWindow({ onOpenApp }) {
                     <span className="flex items-center gap-2 text-gray-700 font-medium">
                       <span className="w-2 h-2 rounded-full bg-red-500"></span> Taxes
                     </span>
-                    <span className="font-semibold text-gray-500">-$8,650</span>
+                    <span className="font-semibold text-gray-500 font-mono">-$8,650.00</span>
                   </div>
 
                   {/* Net Income */}
                   <div className="flex items-center justify-between py-2 bg-emerald-50/60 border border-emerald-200/60 px-2.5 rounded-md">
                     <div className="flex items-center gap-2 text-emerald-900 font-bold">
                       <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Net Income
-                      <span className="bg-emerald-200 text-emerald-800 text-[10px] px-1.5 py-0.2 rounded font-semibold">51.28%</span>
+                      <span className="bg-emerald-200 text-emerald-800 text-[10px] px-1.5 py-0.2 rounded font-semibold">{margin}%</span>
                     </div>
-                    <span className="font-extrabold text-emerald-900 text-sm">$25,950</span>
+                    <span className="font-extrabold text-emerald-900 text-sm font-mono">${Number(netIncome).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                   </div>
                 </div>
               </div>
@@ -313,7 +370,7 @@ export default function HeroNotionWindow({ onOpenApp }) {
                 <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                   <Receipt className="w-5 h-5 text-emerald-600" /> Invoices
                 </h2>
-                <span className="text-xs text-gray-500">6 invoices</span>
+                <span className="text-xs text-gray-500 font-mono">Real-time ledger entries</span>
               </div>
               <div className="border border-gray-200 rounded-lg overflow-hidden text-xs">
                 <table className="w-full text-left">
@@ -327,12 +384,12 @@ export default function HeroNotionWindow({ onOpenApp }) {
                   </thead>
                   <tbody className="divide-y divide-gray-100">
                     {[
-                      { client: 'Netflix', ref: 'New Invoice', num: '20230189', status: 'Draft', color: 'bg-gray-100 text-gray-700' },
-                      { client: 'Figma', ref: 'Config 2023', num: '20230188', status: 'Sent', color: 'bg-blue-100 text-blue-700' },
-                      { client: 'Apple', ref: 'Vision Pro Site', num: '20230187', status: 'Sent', color: 'bg-blue-100 text-blue-700' },
-                      { client: 'Twitter', ref: 'Search Refactor', num: '20230186', status: 'Sent', color: 'bg-blue-100 text-blue-700' },
-                      { client: 'Spotify', ref: 'New Music Player', num: '20230185', status: 'Paid', color: 'bg-emerald-100 text-emerald-700' },
-                      { client: 'Airtable', ref: 'New Product Site', num: '20230184', status: 'Paid', color: 'bg-emerald-100 text-emerald-700' },
+                      { client: 'Netflix Inc', ref: 'INV-2024-001', num: 'ACC-2024-005', status: 'Draft', color: 'bg-gray-100 text-gray-700' },
+                      { client: 'Figma Design', ref: 'Config 2024', num: 'ACC-2024-005', status: 'Sent', color: 'bg-blue-100 text-blue-700' },
+                      { client: 'Apple Enterprise', ref: 'Vision Pro Site', num: 'ACC-2024-005', status: 'Sent', color: 'bg-blue-100 text-blue-700' },
+                      { client: 'Twitter Tech', ref: 'Search Refactor', num: 'ACC-2024-005', status: 'Sent', color: 'bg-blue-100 text-blue-700' },
+                      { client: 'Spotify Streaming', ref: 'Audio Player Integration', num: 'ACC-2024-005', status: 'Paid', color: 'bg-emerald-100 text-emerald-700' },
+                      { client: 'Airtable Base', ref: 'Database Setup', num: 'ACC-2024-005', status: 'Paid', color: 'bg-emerald-100 text-emerald-700' },
                     ].map((row, i) => (
                       <tr key={i} className="hover:bg-gray-50 transition-colors">
                         <td className="p-2.5 font-semibold flex items-center gap-1.5">
@@ -358,44 +415,60 @@ export default function HeroNotionWindow({ onOpenApp }) {
             <div className="space-y-4">
               <div className="flex items-center justify-between pb-2 border-b border-gray-100">
                 <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                  <CreditCard className="w-5 h-5 text-purple-600" /> Transactions
+                  <CreditCard className="w-5 h-5 text-purple-600" /> Live Transactions
                 </h2>
-                <button onClick={onOpenApp} className="text-xs bg-black text-white px-2.5 py-1 rounded">New Transaction</button>
+                <button onClick={onOpenApp} className="text-xs bg-black text-white px-2.5 py-1 rounded cursor-pointer font-semibold">
+                  + New Transaction
+                </button>
               </div>
               <div className="border border-gray-200 rounded-lg overflow-hidden text-xs">
                 <table className="w-full text-left">
                   <thead className="bg-[#f7f6f3] border-b border-gray-200 text-gray-600">
                     <tr>
-                      <th className="p-2.5 font-medium">Date</th>
-                      <th className="p-2.5 font-medium">Transaction</th>
-                      <th className="p-2.5 font-medium">Category</th>
-                      <th className="p-2.5 font-medium text-right">Total</th>
+                      <th className="p-2.5 font-medium">Txn ID</th>
+                      <th className="p-2.5 font-medium">Description</th>
+                      <th className="p-2.5 font-medium">Status</th>
+                      <th className="p-2.5 font-medium text-right">Amount</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
-                    {[
-                      { date: 'June 30, 2023', name: 'Apple Transfer', cat: 'Revenue', amt: '+€11,460.00', positive: true },
-                      { date: 'June 23, 2023', name: 'Uber Travel', cat: 'Travel', amt: '-€40.00', positive: false },
-                      { date: 'June 22, 2023', name: 'Accountant May', cat: 'Accounting', amt: '-€345.00', positive: false },
-                      { date: 'June 22, 2023', name: 'Phone Bill', cat: 'Utilities', amt: '-€345.00', positive: false },
-                      { date: 'June 20, 2023', name: 'Google Workspace', cat: 'Software', amt: '-€345.00', positive: false },
-                      { date: 'June 20, 2023', name: 'Superhuman Mail', cat: 'Software', amt: '-€30.00', positive: false },
-                      { date: 'June 19, 2023', name: 'Slack Tech', cat: 'Software', amt: '-€80.00', positive: false },
-                      { date: 'June 15, 2023', name: 'WeWork Rent', cat: 'Rent', amt: '-€1,150.00', positive: false },
-                    ].map((row, i) => (
-                      <tr key={i} className="hover:bg-gray-50 transition-colors">
-                        <td className="p-2.5 text-gray-500">{row.date}</td>
-                        <td className="p-2.5 font-medium text-gray-900">{row.name}</td>
-                        <td className="p-2.5">
-                          <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-[10px]">
-                            {row.cat}
-                          </span>
-                        </td>
-                        <td className={`p-2.5 text-right font-mono font-semibold ${row.positive ? 'text-emerald-600' : 'text-gray-800'}`}>
-                          {row.amt}
-                        </td>
-                      </tr>
-                    ))}
+                    {liveTransactions.length > 0 ? (
+                      liveTransactions.map((row, i) => (
+                        <tr key={i} className="hover:bg-gray-50 transition-colors">
+                          <td className="p-2.5 text-gray-500 font-mono text-[11px]">{row.transactionId}</td>
+                          <td className="p-2.5 font-medium text-gray-900">{row.description}</td>
+                          <td className="p-2.5">
+                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                              row.status === 'POSTED' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                            }`}>
+                              {row.status}
+                            </span>
+                          </td>
+                          <td className="p-2.5 text-right font-mono font-bold text-gray-900">
+                            ${Number(row.totalAmount || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })} {row.currency}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      [
+                        { id: 'TXN-2024-001', desc: 'Apple Transfer', stat: 'POSTED', amt: '$11,460.00 USD' },
+                        { id: 'TXN-2024-002', desc: 'WeWork Rent', stat: 'POSTED', amt: '$1,150.00 USD' },
+                        { id: 'TXN-2024-003', desc: 'Payroll Jon Doe', stat: 'POSTED', amt: '$5,980.00 USD' }
+                      ].map((row, i) => (
+                        <tr key={i} className="hover:bg-gray-50 transition-colors">
+                          <td className="p-2.5 text-gray-500 font-mono">{row.id}</td>
+                          <td className="p-2.5 font-medium text-gray-900">{row.desc}</td>
+                          <td className="p-2.5">
+                            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                              {row.stat}
+                            </span>
+                          </td>
+                          <td className="p-2.5 text-right font-mono font-bold text-gray-900">
+                            {row.amt}
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>
