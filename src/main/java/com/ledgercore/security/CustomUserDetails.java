@@ -17,6 +17,7 @@ public class CustomUserDetails implements UserDetails {
     private final String email;
     private final String password;
     private final Role role;
+    private final String baseCurrency;
     private final boolean active;
     private final Collection<? extends GrantedAuthority> authorities;
 
@@ -25,6 +26,7 @@ public class CustomUserDetails implements UserDetails {
         this.email = user.getEmail();
         this.password = user.getPasswordHash();
         this.role = user.getRole();
+        this.baseCurrency = user.getBaseCurrency() != null ? user.getBaseCurrency() : "USD";
         this.active = user.isActive();
         this.authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
     }

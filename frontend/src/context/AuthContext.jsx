@@ -49,11 +49,11 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const register = async (email, password, role = 'ADMIN') => {
+  const register = async (email, password, role = 'ADMIN', baseCurrency = 'USD') => {
     setLoading(true);
     setError(null);
     try {
-      await api.register(email, password, role);
+      await api.register(email, password, role, baseCurrency);
       const loginData = await api.login(email, password);
       setUser(loginData.user);
       setToken(loginData.accessToken);

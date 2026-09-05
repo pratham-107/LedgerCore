@@ -16,5 +16,6 @@ public class UserResponse {
     private String userId;
     private String email;
     private Role role;
+    private String baseCurrency;
     private Instant createdAt;
 }

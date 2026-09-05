@@ -52,7 +52,7 @@ export default function DashboardView({ onBackToHome }) {
 
   // New Transaction State
   const [txnDesc, setTxnDesc] = useState('');
-  const [txnCurrency, setTxnCurrency] = useState('USD');
+  const [txnCurrency, setTxnCurrency] = useState(user?.baseCurrency || 'USD');
   const [txnReference, setTxnReference] = useState('');
   const [entries, setEntries] = useState([
     { accountId: '', type: 'DEBIT', amount: '' },
@@ -63,7 +63,7 @@ export default function DashboardView({ onBackToHome }) {
   const [newAccName, setNewAccName] = useState('');
   const [newAccType, setNewAccType] = useState('ASSET');
   const [newAccCat, setNewAccCat] = useState('CURRENT_ASSET');
-  const [newAccCur, setNewAccCur] = useState('USD');
+  const [newAccCur, setNewAccCur] = useState(user?.baseCurrency || 'USD');
   const [newAccBal, setNewAccBal] = useState('0.00');
 
   // CSV Import State
@@ -79,6 +79,13 @@ export default function DashboardView({ onBackToHome }) {
   useEffect(() => {
     loadDashboardData();
   }, []);
+
+  useEffect(() => {
+    if (user?.baseCurrency) {
+      setTxnCurrency(user.baseCurrency);
+      setNewAccCur(user.baseCurrency);
+    }
+  }, [user?.baseCurrency]);
 
   const loadDashboardData = async () => {
     setLoading(true);
@@ -297,8 +304,21 @@ export default function DashboardView({ onBackToHome }) {
             <span>Live Connected</span>
           </div>
 
-          {/* Worldwide Currency Switcher */}
-          <CurrencySelector variant="dashboard" />
+          {/* Worldwide Currency Switcher & Base Operating Currency */}
+          <div className="flex items-center gap-2">
+            {user?.baseCurrency && (
+              <div 
+                className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-gray-50 border border-gray-200 text-gray-700" 
+                title="Organization Functional Base Operating Currency (Ledger Root)"
+              >
+                <span className="text-gray-400 text-[10px] uppercase font-bold tracking-wider">Base:</span>
+                <span>{SUPPORTED_CURRENCIES[user.baseCurrency]?.flag || '🌐'}</span>
+                <span className="font-bold text-gray-900">{user.baseCurrency}</span>
+                <span className="text-gray-400 font-mono text-[11px]">({SUPPORTED_CURRENCIES[user.baseCurrency]?.symbol || ''})</span>
+              </div>
+            )}
+            <CurrencySelector variant="dashboard" />
+          </div>
 
           <div className="h-5 w-[1px] bg-gray-200" />
 

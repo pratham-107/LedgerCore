@@ -29,4 +29,7 @@ public class RegisterRequest {
 
     @NotNull(message = "Role is required")
     private Role role;
+
+    @Builder.Default
+    private String baseCurrency = "USD";
 }

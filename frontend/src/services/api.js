@@ -63,8 +63,8 @@ export const api = {
     return res.data;
   },
 
-  async register(email, password, role) {
-    const res = await client.post('/auth/register', { email, password, role });
+  async register(email, password, role, baseCurrency = 'USD') {
+    const res = await client.post('/auth/register', { email, password, role, baseCurrency });
     return res.data;
   },
 

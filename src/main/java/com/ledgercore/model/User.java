@@ -30,6 +30,9 @@ public class User {
     private Role role;
 
     @Builder.Default
+    private String baseCurrency = "USD";
+
+    @Builder.Default
     private boolean isActive = true;
 
     @CreatedDate

@@ -16,6 +16,7 @@ import {
   Info
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { SUPPORTED_CURRENCIES } from '../context/CurrencyContext';
 
 const ADMIN_PASSCODE = 'LEDGERCORE-ADMIN-2026';
 
@@ -35,6 +36,7 @@ export default function AuthModal({ onAuthSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('ACCOUNTANT');
+  const [baseCurrency, setBaseCurrency] = useState('USD');
   const [adminPasscode, setAdminPasscode] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [formError, setFormError] = useState('');
@@ -71,7 +73,7 @@ export default function AuthModal({ onAuthSuccess }) {
           return;
         }
 
-        await register(email, password, role);
+        await register(email, password, role, baseCurrency);
         if (onAuthSuccess) onAuthSuccess();
       }
     } catch (err) {
@@ -260,6 +262,32 @@ export default function AuthModal({ onAuthSuccess }) {
                     />
                   </div>
                 )}
+                <div className="space-y-1.5 pt-1">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-semibold text-gray-700">
+                      Base Operating Currency
+                    </label>
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                      Permanent Anchor
+                    </span>
+                  </div>
+                  <div className="relative">
+                    <select
+                      value={baseCurrency}
+                      onChange={(e) => setBaseCurrency(e.target.value)}
+                      className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-black transition-all cursor-pointer"
+                    >
+                      {Object.values(SUPPORTED_CURRENCIES).map((c) => (
+                        <option key={c.code} value={c.code}>
+                          {c.flag} {c.code} - {c.name} ({c.symbol})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <p className="text-[11px] text-gray-400">
+                    All double-entry ledger postings, chart accounts, and P&L statements will anchor permanently in this functional currency.
+                  </p>
+                </div>
               </div>
             )}
 

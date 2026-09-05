@@ -41,16 +41,18 @@ public class AuthService {
                 .email(request.getEmail().toLowerCase().trim())
                 .passwordHash(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
+                .baseCurrency(request.getBaseCurrency() != null ? request.getBaseCurrency().toUpperCase().trim() : "USD")
                 .isActive(true)
                 .build();
 
         User savedUser = userRepository.save(user);
-        log.info("Registered new user with email: {} and role: {}", savedUser.getEmail(), savedUser.getRole());
+        log.info("Registered new user with email: {}, role: {}, baseCurrency: {}", savedUser.getEmail(), savedUser.getRole(), savedUser.getBaseCurrency());
 
         return UserResponse.builder()
                 .userId(savedUser.getId())
                 .email(savedUser.getEmail())
                 .role(savedUser.getRole())
+                .baseCurrency(savedUser.getBaseCurrency())
                 .createdAt(savedUser.getCreatedAt())
                 .build();
     }
@@ -82,6 +84,7 @@ public class AuthService {
                             .userId(userDetails.getId())
                             .email(userDetails.getEmail())
                             .role(userDetails.getRole())
+                            .baseCurrency(userDetails.getBaseCurrency())
                             .build())
                     .build();
 
