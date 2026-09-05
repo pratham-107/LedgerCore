@@ -27,8 +27,10 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { api } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 export default function HeroNotionWindow({ onOpenApp }) {
+  const { user, isAuthenticated, openAuthModal } = useAuth();
   const [activeTab, setActiveTab] = useState('dashboard'); // dashboard | transactions | invoices
   const [liveAccounts, setLiveAccounts] = useState([]);
   const [liveTransactions, setLiveTransactions] = useState([]);
@@ -130,15 +132,25 @@ export default function HeroNotionWindow({ onOpenApp }) {
         <aside className="w-56 bg-[#f7f6f3] border-r border-gray-200 p-3 flex flex-col justify-between select-none">
           <div className="space-y-4">
             {/* Workspace profile */}
-            <div className="flex items-center justify-between px-1 py-1 hover:bg-[#efedea] rounded cursor-pointer transition-colors">
-              <div className="flex items-center gap-2">
-                <div className="w-5 h-5 rounded bg-black text-white font-bold text-[10px] flex items-center justify-center">L</div>
+            <div 
+              onClick={() => openAuthModal('login')}
+              title="Click to sign in or switch account"
+              className="flex items-center justify-between px-1.5 py-1.5 hover:bg-[#efedea] rounded-lg cursor-pointer transition-colors border border-transparent hover:border-gray-200"
+            >
+              <div className="flex items-center gap-2 truncate">
+                <div className="w-5 h-5 rounded bg-black text-white font-bold text-[10px] flex items-center justify-center shrink-0">
+                  {user?.email ? user.email.charAt(0).toUpperCase() : 'L'}
+                </div>
                 <div className="truncate">
-                  <div className="font-semibold text-xs text-gray-900 leading-tight">LedgerCore</div>
-                  <div className="text-[10px] text-gray-500 truncate">team@ledgercore.com</div>
+                  <div className="font-semibold text-xs text-gray-900 leading-tight truncate">
+                    {isAuthenticated ? (user?.role || 'User') : 'Sign In'}
+                  </div>
+                  <div className="text-[10px] text-gray-500 truncate">
+                    {isAuthenticated ? user?.email : 'Click to authenticate'}
+                  </div>
                 </div>
               </div>
-              <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
+              <ChevronDown className="w-3.5 h-3.5 text-gray-400 shrink-0" />
             </div>
 
             {/* Quick Actions */}

@@ -23,13 +23,16 @@ import {
 } from 'lucide-react';
 import { api } from '../services/api';
 
+import { useAuth } from '../context/AuthContext';
+
 export default function LiveAppModal({ isOpen, onClose }) {
+  const { user, isAuthenticated, openAuthModal, login } = useAuth();
   const [tab, setTab] = useState('dashboard'); // dashboard | transactions | new-txn | accounts | import | reports
   const [accounts, setAccounts] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [pnl, setPnl] = useState(null);
   const [balanceSheet, setBalanceSheet] = useState(null);
-  const [userRole, setUserRole] = useState('ADMIN');
+  const userRole = user?.role || 'ADMIN';
   const [statusMessage, setStatusMessage] = useState(null);
 
   // New Transaction Form State
@@ -173,20 +176,44 @@ export default function LiveAppModal({ isOpen, onClose }) {
             </span>
           </div>
 
-          {/* Role switcher & Close */}
+          {/* User Account / Role switcher & Close */}
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5 bg-white border border-gray-200 px-2 py-1 rounded-lg text-xs">
-              <span className="text-gray-400 font-medium">RBAC Role:</span>
-              <select
-                value={userRole}
-                onChange={(e) => setUserRole(e.target.value)}
-                className="font-bold text-gray-800 bg-transparent focus:outline-none cursor-pointer"
+            {isAuthenticated ? (
+              <div className="flex items-center gap-2 bg-white border border-gray-200 px-2.5 py-1 rounded-lg text-xs">
+                <span className="text-gray-400 font-medium">Active:</span>
+                <span className="font-bold text-gray-800">{user?.role || userRole}</span>
+                <select
+                  value={user?.role || 'ADMIN'}
+                  onChange={async (e) => {
+                    const newRole = e.target.value;
+                    const demoEmail = newRole === 'ADMIN' 
+                      ? 'admin@ledgercore.com' 
+                      : newRole === 'ACCOUNTANT' 
+                        ? 'accountant@ledgercore.com' 
+                        : 'viewer@ledgercore.com';
+                    try {
+                      await login(demoEmail, 'SecurePass123!');
+                      setStatusMessage({ type: 'success', text: `Switched session to ${newRole} (${demoEmail})` });
+                      loadData();
+                    } catch (err) {
+                      setStatusMessage({ type: 'error', text: 'Could not switch user: ' + err.message });
+                    }
+                  }}
+                  className="text-gray-500 hover:text-black font-semibold bg-transparent focus:outline-none cursor-pointer border-l border-gray-200 pl-1.5 ml-1"
+                >
+                  <option value="ADMIN">👑 Switch to Admin</option>
+                  <option value="ACCOUNTANT">💼 Switch to Accountant</option>
+                  <option value="VIEWER">👁️ Switch to Viewer</option>
+                </select>
+              </div>
+            ) : (
+              <button
+                onClick={() => openAuthModal('login')}
+                className="bg-black text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-gray-800 transition-all"
               >
-                <option value="ADMIN">ADMIN</option>
-                <option value="ACCOUNTANT">ACCOUNTANT</option>
-                <option value="VIEWER">VIEWER</option>
-              </select>
-            </div>
+                Sign In
+              </button>
+            )}
             <button
               onClick={onClose}
               className="w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-black transition-colors cursor-pointer"
@@ -447,7 +474,7 @@ export default function LiveAppModal({ isOpen, onClose }) {
                 <div>
                   <h3 className="text-xl font-bold text-gray-900">Create Double-Entry Transaction</h3>
                   <p className="text-xs text-gray-500 mt-1">
-                    Every transaction requires balanced debits and credits ($\sum \text{Debits} = \sum \text{Credits}$).
+                    Every transaction requires balanced debits and credits (sum of Debits = sum of Credits).
                   </p>
                 </div>
 
