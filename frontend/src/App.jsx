@@ -7,40 +7,54 @@ import FinancesSection from './components/FinancesSection';
 import PrivacySection from './components/PrivacySection';
 import ToolkitSection from './components/ToolkitSection';
 import CtaFooterSection from './components/CtaFooterSection';
-import LiveAppModal from './components/LiveAppModal';
+import DashboardView from './components/DashboardView';
 import AuthModal from './components/AuthModal';
 
-function AppContent() {
-  const [isAppOpen, setIsAppOpen] = useState(false);
+function MainApp() {
+  const [currentView, setCurrentView] = useState('landing'); // 'landing' | 'dashboard'
   const { isAuthenticated, openAuthModal } = useAuth();
 
-  const handleOpenWorkspace = () => {
-    // If not authenticated, open auth modal or allow direct dashboard
-    setIsAppOpen(true);
+  const handleOpenDashboard = () => {
+    if (isAuthenticated) {
+      setCurrentView('dashboard');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      openAuthModal('login');
+    }
   };
 
+  const handleBackToLanding = () => {
+    setCurrentView('landing');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // If user is inside the Dashboard view and is authenticated
+  if (currentView === 'dashboard' && isAuthenticated) {
+    return (
+      <DashboardView onBackToHome={handleBackToLanding} />
+    );
+  }
+
+  // Home / Landing Page (Purely readable presentation showcase)
   return (
     <div className="min-h-screen bg-white text-[#1a1a19] flex flex-col font-sans selection:bg-amber-100 selection:text-amber-900">
       {/* Top Banner & Navigation */}
-      <Navbar onOpenApp={() => setIsAppOpen(true)} />
+      <Navbar onOpenApp={handleOpenDashboard} />
 
-      {/* Hero Section with Notion Mockup */}
+      {/* Main Landing Sections */}
       <main className="flex-1">
-        <HeroSection onOpenApp={handleOpenWorkspace} />
+        <HeroSection onOpenApp={handleOpenDashboard} />
         <InvoicesSection />
         <FinancesSection />
         <PrivacySection />
         <ToolkitSection />
       </main>
 
-      {/* Bottom CTA with Floating 3D Shapes & Footer */}
-      <CtaFooterSection onOpenApp={handleOpenWorkspace} />
+      {/* Bottom CTA & Footer */}
+      <CtaFooterSection onOpenApp={handleOpenDashboard} />
 
-      {/* Interactive Live Financial Engine Modal */}
-      <LiveAppModal isOpen={isAppOpen} onClose={() => setIsAppOpen(false)} />
-
-      {/* Authentication Modal (Sign In & Sign Up) */}
-      <AuthModal />
+      {/* Authentication Modal */}
+      <AuthModal onAuthSuccess={() => setCurrentView('dashboard')} />
     </div>
   );
 }
@@ -48,7 +62,7 @@ function AppContent() {
 export default function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <MainApp />
     </AuthProvider>
   );
 }

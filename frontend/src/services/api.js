@@ -47,23 +47,10 @@ client.interceptors.response.use(
 
 export const api = {
   // Authentication Endpoints
-  async ensureAuthenticated() {
-    let token = localStorage.getItem('ledgercore_token');
+  ensureAuthenticated() {
+    const token = localStorage.getItem('ledgercore_token');
     if (!token) {
-      // Auto-login with default admin credentials if no active session
-      try {
-        const res = await axios.post(`${API_BASE}/auth/login`, {
-          email: 'admin@ledgercore.com',
-          password: 'SecurePass123!'
-        });
-        localStorage.setItem('ledgercore_token', res.data.accessToken);
-        localStorage.setItem('ledgercore_refresh_token', res.data.refreshToken);
-        localStorage.setItem('ledgercore_user', JSON.stringify(res.data.user));
-        return res.data;
-      } catch (e) {
-        console.warn('Backend server not yet ready at http://localhost:8080');
-        throw e;
-      }
+      throw new Error('Unauthenticated: Please log in to access this resource.');
     }
     return JSON.parse(localStorage.getItem('ledgercore_user') || '{}');
   },

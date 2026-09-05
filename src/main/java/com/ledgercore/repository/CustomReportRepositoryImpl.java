@@ -192,8 +192,10 @@ public class CustomReportRepositoryImpl implements CustomReportRepository {
                 } else {
                     longTermLiabilities = longTermLiabilities.add(bal);
                 }
-            } else if (account.getType() == AccountType.EQUITY) {
+            } else if (account.getType() == AccountType.EQUITY || account.getType() == AccountType.REVENUE) {
                 totalEquity = totalEquity.add(bal);
+            } else if (account.getType() == AccountType.EXPENSE) {
+                totalEquity = totalEquity.subtract(bal);
             }
         }
 
