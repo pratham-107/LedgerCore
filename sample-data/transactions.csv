@@ -1,0 +1,6 @@
+description,currency,debit_account,debit_amount,credit_account,credit_amount
+Office Supplies,USD,ACC-2024-006,150.00,ACC-2024-001,150.00
+Internet Bill,USD,ACC-2024-006,89.99,ACC-2024-001,89.99
+Monthly Office Rent,USD,ACC-2024-007,2000.00,ACC-2024-002,2000.00
+Software Subscription,USD,ACC-2024-006,49.00,ACC-2024-001,49.00
+Client Payment for Consulting,USD,ACC-2024-002,5000.00,ACC-2024-005,5000.00

@@ -1,0 +1,13 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/ledgercore_test
+    redis:
+      host: localhost
+      port: 6379
+ledgercore:
+  rate-limit:
+    enabled: false
