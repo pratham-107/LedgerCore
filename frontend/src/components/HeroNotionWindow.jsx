@@ -24,7 +24,10 @@ import {
   ArrowUpRight
 } from 'lucide-react';
 
+import { useCurrency } from '../context/CurrencyContext';
+
 export default function HeroNotionWindow({ onOpenApp }) {
+  const { format, currency } = useCurrency();
   const [activeTab, setActiveTab] = useState('dashboard'); // dashboard | transactions | invoices
 
   return (
@@ -177,7 +180,7 @@ export default function HeroNotionWindow({ onOpenApp }) {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                 <div className="bg-[#fbfbfa] p-4 rounded-xl border border-gray-200/70 hover:border-gray-300 transition-all">
                   <div className="text-[11px] text-gray-500 font-medium">Total Cash & Assets</div>
-                  <div className="text-xl font-bold text-gray-900 mt-1">$482,950.00</div>
+                  <div className="text-xl font-bold text-gray-900 mt-1">{format(482950)}</div>
                   <div className="text-[10px] text-emerald-600 mt-1 flex items-center gap-1 font-semibold">
                     <TrendingUp className="w-3 h-3" /> +12.4% this quarter
                   </div>
@@ -185,14 +188,14 @@ export default function HeroNotionWindow({ onOpenApp }) {
 
                 <div className="bg-[#fbfbfa] p-4 rounded-xl border border-gray-200/70 hover:border-gray-300 transition-all">
                   <div className="text-[11px] text-gray-500 font-medium">Monthly Operating Burn</div>
-                  <div className="text-xl font-bold text-gray-900 mt-1">$14,200.00</div>
+                  <div className="text-xl font-bold text-gray-900 mt-1">{format(14200)}</div>
                   <div className="text-[10px] text-gray-400 mt-1">34 months runway</div>
                 </div>
 
                 <div className="bg-[#fbfbfa] p-4 rounded-xl border border-gray-200/70 hover:border-gray-300 transition-all">
                   <div className="text-[11px] text-gray-500 font-medium">Net Operating Income</div>
-                  <div className="text-xl font-bold text-emerald-600 mt-1">+$38,450.00</div>
-                  <div className="text-[10px] text-emerald-600 font-semibold mt-1">100% Balanced</div>
+                  <div className="text-xl font-bold text-emerald-600 mt-1">+{format(38450)}</div>
+                  <div className="text-[10px] text-emerald-600 font-semibold mt-1">100% Balanced ({currency.code})</div>
                 </div>
               </div>
 
@@ -200,7 +203,9 @@ export default function HeroNotionWindow({ onOpenApp }) {
               <div className="border border-gray-200 rounded-xl overflow-hidden shadow-2xs">
                 <div className="bg-[#f7f6f3] px-4 py-2 border-b border-gray-200 font-semibold text-gray-700 flex justify-between items-center">
                   <span>Profit & Loss Breakdown (YTD)</span>
-                  <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">Real-time Verified</span>
+                  <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">
+                    {currency.code} ({currency.symbol})
+                  </span>
                 </div>
                 <table className="w-full text-left text-xs">
                   <thead className="bg-gray-50 text-gray-500 border-b border-gray-200">
@@ -214,21 +219,21 @@ export default function HeroNotionWindow({ onOpenApp }) {
                     <tr>
                       <td className="py-2.5 px-4 font-medium text-gray-800">SaaS & Enterprise Revenue</td>
                       <td className="py-2.5 px-4 text-gray-500">Operating Revenue</td>
-                      <td className="py-2.5 px-4 font-bold text-emerald-600 text-right">+$124,500.00</td>
+                      <td className="py-2.5 px-4 font-bold text-emerald-600 text-right">+{format(124500)}</td>
                     </tr>
                     <tr>
                       <td className="py-2.5 px-4 font-medium text-gray-800">Cloud Infrastructure (AWS)</td>
                       <td className="py-2.5 px-4 text-gray-500">Cost of Goods Sold</td>
-                      <td className="py-2.5 px-4 font-bold text-rose-600 text-right">-$8,200.00</td>
+                      <td className="py-2.5 px-4 font-bold text-rose-600 text-right">-{format(8200)}</td>
                     </tr>
                     <tr>
                       <td className="py-2.5 px-4 font-medium text-gray-800">Payroll & Engineering</td>
                       <td className="py-2.5 px-4 text-gray-500">Operating Expense</td>
-                      <td className="py-2.5 px-4 font-bold text-rose-600 text-right">-$62,400.00</td>
+                      <td className="py-2.5 px-4 font-bold text-rose-600 text-right">-{format(62400)}</td>
                     </tr>
                     <tr className="bg-gray-50/70 font-bold border-t border-gray-200">
                       <td className="py-3 px-4 text-gray-900" colSpan={2}>Net Operating Margin</td>
-                      <td className="py-3 px-4 text-emerald-600 text-right text-sm">+$53,900.00</td>
+                      <td className="py-3 px-4 text-emerald-600 text-right text-sm">+{format(53900)}</td>
                     </tr>
                   </tbody>
                 </table>

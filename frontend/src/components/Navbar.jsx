@@ -1,6 +1,7 @@
 import React from 'react';
 import { Layers, ArrowUpRight, LogIn, UserPlus, LogOut, ShieldCheck, Building2, UserCheck, Shield } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import CurrencySelector from './CurrencySelector';
 
 export default function Navbar({ onOpenApp }) {
   const { user, isAuthenticated, logout, openAuthModal } = useAuth();
@@ -69,6 +70,9 @@ export default function Navbar({ onOpenApp }) {
           >
             API Docs <ArrowUpRight className="w-3.5 h-3.5 text-gray-400" />
           </a>
+
+          {/* Currency Selector */}
+          <CurrencySelector variant="navbar" />
 
           {/* Auth Controls */}
           {isAuthenticated ? (

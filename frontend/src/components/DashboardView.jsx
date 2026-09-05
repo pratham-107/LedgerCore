@@ -30,9 +30,12 @@ import {
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { useCurrency, SUPPORTED_CURRENCIES } from '../context/CurrencyContext';
+import CurrencySelector from './CurrencySelector';
 
 export default function DashboardView({ onBackToHome }) {
   const { user, logout } = useAuth();
+  const { currency, currencyCode, format, formatRaw, convertFromUSD, convert } = useCurrency();
   const userRole = user?.role || 'VIEWER';
 
   // Active sub-view
@@ -294,6 +297,9 @@ export default function DashboardView({ onBackToHome }) {
             <span>Live Connected</span>
           </div>
 
+          {/* Worldwide Currency Switcher */}
+          <CurrencySelector variant="dashboard" />
+
           <div className="h-5 w-[1px] bg-gray-200" />
 
           <div className="flex items-center gap-2.5">
@@ -464,9 +470,9 @@ export default function DashboardView({ onBackToHome }) {
                     <TrendingUp className="w-4 h-4 text-emerald-600" />
                   </div>
                   <div className="text-2xl font-bold text-gray-950">
-                    ${pnl?.totalRevenue?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
+                    {format(pnl?.totalRevenue || 0)}
                   </div>
-                  <div className="text-[11px] text-emerald-600 font-medium mt-1">Aggregated Income</div>
+                  <div className="text-[11px] text-emerald-600 font-medium mt-1">Aggregated Income ({currency.code})</div>
                 </div>
 
                 <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
@@ -475,9 +481,9 @@ export default function DashboardView({ onBackToHome }) {
                     <TrendingDown className="w-4 h-4 text-rose-600" />
                   </div>
                   <div className="text-2xl font-bold text-gray-950">
-                    ${pnl?.totalExpense?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
+                    {format(pnl?.totalExpense || 0)}
                   </div>
-                  <div className="text-[11px] text-rose-600 font-medium mt-1">Operational Burn</div>
+                  <div className="text-[11px] text-rose-600 font-medium mt-1">Operational Burn ({currency.code})</div>
                 </div>
 
                 <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
@@ -486,9 +492,9 @@ export default function DashboardView({ onBackToHome }) {
                     <DollarSign className="w-4 h-4 text-blue-600" />
                   </div>
                   <div className={`text-2xl font-bold ${pnl?.netIncome >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
-                    ${pnl?.netIncome?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
+                    {format(pnl?.netIncome || 0)}
                   </div>
-                  <div className="text-[11px] text-gray-500 font-medium mt-1">Revenue - Expenses</div>
+                  <div className="text-[11px] text-gray-500 font-medium mt-1">Revenue - Expenses ({currency.code})</div>
                 </div>
 
                 <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
@@ -497,9 +503,9 @@ export default function DashboardView({ onBackToHome }) {
                     <Landmark className="w-4 h-4 text-amber-600" />
                   </div>
                   <div className="text-2xl font-bold text-gray-950">
-                    ${balanceSheet?.totalAssets?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
+                    {format(balanceSheet?.totalAssets || 0)}
                   </div>
-                  <div className="text-[11px] text-amber-600 font-medium mt-1">Cash & Receivables</div>
+                  <div className="text-[11px] text-amber-600 font-medium mt-1">Cash & Receivables ({currency.code})</div>
                 </div>
               </div>
 
@@ -528,7 +534,9 @@ export default function DashboardView({ onBackToHome }) {
                           <td className="py-3 px-4 font-mono font-medium text-gray-600">{t.transactionId}</td>
                           <td className="py-3 px-4 font-semibold text-gray-900">{t.description}</td>
                           <td className="py-3 px-4 text-gray-500">{t.reference || '-'}</td>
-                          <td className="py-3 px-4 font-bold text-gray-900">${t.amount?.toFixed(2)} {t.currency}</td>
+                          <td className="py-3 px-4 font-bold text-gray-900">
+                            {(SUPPORTED_CURRENCIES[t.currency]?.symbol || '$')}{(t.amount || 0).toFixed(2)} {t.currency}
+                          </td>
                           <td className="py-3 px-4">
                             <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                               t.status === 'POSTED' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
@@ -612,7 +620,14 @@ export default function DashboardView({ onBackToHome }) {
                           <div className="font-semibold text-gray-900">{t.description}</div>
                           {t.reference && <div className="text-[10px] text-gray-400">Ref: {t.reference}</div>}
                         </td>
-                        <td className="py-3.5 px-4 font-bold text-gray-900">${t.amount?.toFixed(2)} {t.currency}</td>
+                        <td className="py-3.5 px-4 font-bold text-gray-900">
+                          {(SUPPORTED_CURRENCIES[t.currency]?.symbol || '$')}{(t.amount || 0).toFixed(2)} {t.currency}
+                          {t.currency !== currencyCode && (
+                            <span className="block text-[10px] text-gray-400 font-normal">
+                              ≈ {format(convert(t.amount, t.currency, 'USD'))}
+                            </span>
+                          )}
+                        </td>
                         <td className="py-3.5 px-4">
                           <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                             t.status === 'POSTED' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
@@ -662,8 +677,8 @@ export default function DashboardView({ onBackToHome }) {
               )}
 
               <form onSubmit={handleCreateTxn} className="bg-white p-6 rounded-2xl border border-gray-200 shadow-xs space-y-5">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="sm:col-span-1">
                     <label className="block text-xs font-semibold text-gray-700 mb-1">Description</label>
                     <input
                       type="text"
@@ -686,6 +701,21 @@ export default function DashboardView({ onBackToHome }) {
                       className="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/10"
                     />
                   </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Ledger Currency</label>
+                    <select
+                      value={txnCurrency}
+                      onChange={(e) => setTxnCurrency(e.target.value)}
+                      disabled={!canPostTransactions}
+                      className="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/10"
+                    >
+                      {Object.values(SUPPORTED_CURRENCIES).map((c) => (
+                        <option key={c.code} value={c.code}>
+                          {c.flag} {c.code} — {c.name} ({c.symbol})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
                 {/* Ledger Entries */}
@@ -704,49 +734,51 @@ export default function DashboardView({ onBackToHome }) {
                   </div>
 
                   <div className="space-y-2.5">
-                    {entries.map((entry, idx) => (
-                      <div key={idx} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-200">
-                        <select
-                          value={entry.accountId}
-                          onChange={(e) => {
-                            const copy = [...entries];
-                            copy[idx].accountId = e.target.value;
-                            setEntries(copy);
-                          }}
-                          disabled={!canPostTransactions}
-                          className="flex-1 px-3 py-2 bg-white border border-gray-200 rounded-lg text-xs font-semibold"
-                        >
-                          <option value="">Select Account...</option>
-                          {accounts.map(acc => (
-                            <option key={acc.id || acc.accountId} value={acc.accountId || acc.id}>
-                              {acc.accountId} — {acc.accountName} ({acc.type})
-                            </option>
-                          ))}
-                        </select>
+                    {entries.map((entry, idx) => {
+                      const curObj = SUPPORTED_CURRENCIES[txnCurrency] || SUPPORTED_CURRENCIES.USD;
+                      return (
+                        <div key={idx} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-200">
+                          <select
+                            value={entry.accountId}
+                            onChange={(e) => {
+                              const copy = [...entries];
+                              copy[idx].accountId = e.target.value;
+                              setEntries(copy);
+                            }}
+                            disabled={!canPostTransactions}
+                            className="flex-1 px-3 py-2 bg-white border border-gray-200 rounded-lg text-xs font-semibold"
+                          >
+                            <option value="">Select Account...</option>
+                            {accounts.map(acc => (
+                              <option key={acc.id || acc.accountId} value={acc.accountId || acc.id}>
+                                {acc.accountId} — {acc.accountName} ({acc.type})
+                              </option>
+                            ))}
+                          </select>
 
-                        <select
-                          value={entry.type}
-                          onChange={(e) => {
-                            const copy = [...entries];
-                            copy[idx].type = e.target.value;
-                            setEntries(copy);
-                          }}
-                          disabled={!canPostTransactions}
-                          className={`w-28 px-3 py-2 border rounded-lg text-xs font-bold ${
-                            entry.type === 'DEBIT' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                          }`}
-                        >
-                          <option value="DEBIT">DEBIT</option>
-                          <option value="CREDIT">CREDIT</option>
-                        </select>
+                          <select
+                            value={entry.type}
+                            onChange={(e) => {
+                              const copy = [...entries];
+                              copy[idx].type = e.target.value;
+                              setEntries(copy);
+                            }}
+                            disabled={!canPostTransactions}
+                            className={`w-28 px-3 py-2 border rounded-lg text-xs font-bold ${
+                              entry.type === 'DEBIT' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                            }`}
+                          >
+                            <option value="DEBIT">DEBIT</option>
+                            <option value="CREDIT">CREDIT</option>
+                          </select>
 
-                        <div className="relative w-36">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-xs">$</span>
-                          <input
-                            type="number"
-                            step="0.01"
-                            required
-                            placeholder="0.00"
+                          <div className="relative w-36">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-xs">{curObj.symbol}</span>
+                            <input
+                              type="number"
+                              step="0.01"
+                              required
+                              placeholder="0.00"
                             value={entry.amount}
                             onChange={(e) => {
                               const copy = [...entries];
@@ -768,7 +800,8 @@ export default function DashboardView({ onBackToHome }) {
                           </button>
                         )}
                       </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -818,7 +851,7 @@ export default function DashboardView({ onBackToHome }) {
               {canManageAccounts ? (
                 <form onSubmit={handleCreateAccount} className="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs space-y-4">
                   <div className="font-bold text-xs text-gray-800 uppercase tracking-wider">Create New Account (Admin Only)</div>
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
                     <input
                       type="text"
                       required
@@ -850,6 +883,17 @@ export default function DashboardView({ onBackToHome }) {
                       <option value="OPERATING_EXPENSE">OPERATING_EXPENSE</option>
                       <option value="EQUITY">EQUITY</option>
                     </select>
+                    <select
+                      value={newAccCur}
+                      onChange={(e) => setNewAccCur(e.target.value)}
+                      className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold"
+                    >
+                      {Object.values(SUPPORTED_CURRENCIES).map((c) => (
+                        <option key={c.code} value={c.code}>
+                          {c.flag} {c.code} ({c.symbol})
+                        </option>
+                      ))}
+                    </select>
                     <button
                       type="submit"
                       className="bg-black hover:bg-gray-800 text-white text-xs font-semibold rounded-xl py-2 shadow-xs"
@@ -877,21 +921,24 @@ export default function DashboardView({ onBackToHome }) {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
-                    {accounts.map((acc) => (
-                      <tr key={acc.id || acc.accountId} className="hover:bg-gray-50/80">
-                        <td className="py-3.5 px-4 font-mono font-medium text-gray-700">{acc.accountId}</td>
-                        <td className="py-3.5 px-4 font-bold text-gray-900">{acc.accountName}</td>
-                        <td className="py-3.5 px-4">
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-100 text-gray-800">
-                            {acc.type}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4 text-gray-500">{acc.category}</td>
-                        <td className="py-3.5 px-4 text-right font-mono font-bold text-gray-900">
-                          ${acc.balance?.toFixed(2) || '0.00'} {acc.currency}
-                        </td>
-                      </tr>
-                    ))}
+                    {accounts.map((acc) => {
+                      const curObj = SUPPORTED_CURRENCIES[acc.currency] || SUPPORTED_CURRENCIES.USD;
+                      return (
+                        <tr key={acc.id || acc.accountId} className="hover:bg-gray-50/80">
+                          <td className="py-3.5 px-4 font-mono font-medium text-gray-700">{acc.accountId}</td>
+                          <td className="py-3.5 px-4 font-bold text-gray-900">{acc.accountName}</td>
+                          <td className="py-3.5 px-4">
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-100 text-gray-800">
+                              {acc.type}
+                            </span>
+                          </td>
+                          <td className="py-3.5 px-4 text-gray-500">{acc.category}</td>
+                          <td className="py-3.5 px-4 text-right font-mono font-bold text-gray-900">
+                            {curObj.symbol}{(acc.balance || 0).toLocaleString('en-US', { minimumFractionDigits: curObj.decimals ?? 2, maximumFractionDigits: curObj.decimals ?? 2 })} {acc.currency}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -914,23 +961,23 @@ export default function DashboardView({ onBackToHome }) {
                       <TrendingUp className="w-4 h-4 text-emerald-600" /> Profit & Loss Statement
                     </h3>
                     <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
-                      USD
+                      {currency.code} ({currency.symbol})
                     </span>
                   </div>
 
                   <div className="space-y-2 text-xs">
                     <div className="flex justify-between py-1.5 font-semibold text-gray-700">
                       <span>Total Operating Revenue:</span>
-                      <span className="text-emerald-600 font-bold">${pnl?.totalRevenue?.toFixed(2) || '0.00'}</span>
+                      <span className="text-emerald-600 font-bold">{format(pnl?.totalRevenue || 0)}</span>
                     </div>
                     <div className="flex justify-between py-1.5 font-semibold text-gray-700">
                       <span>Total Operating Expenses:</span>
-                      <span className="text-rose-600 font-bold">(${pnl?.totalExpense?.toFixed(2) || '0.00'})</span>
+                      <span className="text-rose-600 font-bold">({format(pnl?.totalExpense || 0)})</span>
                     </div>
                     <div className="flex justify-between py-3 border-t-2 border-gray-900 font-black text-sm text-gray-950">
                       <span>Net Operating Income:</span>
-                      <span className={pnl?.netIncome >= 0 ? 'text-emerald-600' : 'text-rose-600'}>
-                        ${pnl?.netIncome?.toFixed(2) || '0.00'}
+                      <span className={pnl?.netIncome >= 0 ? 'text-emerald-600 font-bold' : 'text-rose-600 font-bold'}>
+                        {format(pnl?.netIncome || 0)}
                       </span>
                     </div>
                   </div>
@@ -943,27 +990,27 @@ export default function DashboardView({ onBackToHome }) {
                       <Scale className="w-4 h-4 text-blue-600" /> Balance Sheet Equation
                     </h3>
                     <span className="text-[10px] font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
-                      Assets = Liabilities + Equity
+                      Assets = Liab + Equity ({currency.code})
                     </span>
                   </div>
 
                   <div className="space-y-2 text-xs">
                     <div className="flex justify-between py-1.5 font-semibold text-gray-700">
                       <span>Total Assets:</span>
-                      <span className="font-bold text-gray-950">${balanceSheet?.totalAssets?.toFixed(2) || '0.00'}</span>
+                      <span className="font-bold text-gray-950">{format(balanceSheet?.totalAssets || 0)}</span>
                     </div>
                     <div className="flex justify-between py-1.5 font-semibold text-gray-700">
                       <span>Total Liabilities:</span>
-                      <span className="font-bold text-gray-950">${balanceSheet?.totalLiabilities?.toFixed(2) || '0.00'}</span>
+                      <span className="font-bold text-gray-950">{format(balanceSheet?.totalLiabilities || 0)}</span>
                     </div>
                     <div className="flex justify-between py-1.5 font-semibold text-gray-700">
                       <span>Total Equity:</span>
-                      <span className="font-bold text-gray-950">${balanceSheet?.totalEquity?.toFixed(2) || '0.00'}</span>
+                      <span className="font-bold text-gray-950">{format(balanceSheet?.totalEquity || 0)}</span>
                     </div>
                     <div className="flex justify-between py-3 border-t-2 border-gray-900 font-black text-sm text-gray-950">
                       <span>Liabilities + Equity:</span>
-                      <span className="text-blue-600">
-                        ${((balanceSheet?.totalLiabilities || 0) + (balanceSheet?.totalEquity || 0)).toFixed(2)}
+                      <span className="text-blue-600 font-bold">
+                        {format((balanceSheet?.totalLiabilities || 0) + (balanceSheet?.totalEquity || 0))}
                       </span>
                     </div>
                   </div>

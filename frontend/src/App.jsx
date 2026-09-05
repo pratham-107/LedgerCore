@@ -59,10 +59,14 @@ function MainApp() {
   );
 }
 
+import { CurrencyProvider } from './context/CurrencyContext';
+
 export default function App() {
   return (
     <AuthProvider>
-      <MainApp />
+      <CurrencyProvider>
+        <MainApp />
+      </CurrencyProvider>
     </AuthProvider>
   );
 }
