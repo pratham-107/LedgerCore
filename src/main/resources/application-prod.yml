@@ -8,6 +8,10 @@ spring:
     redis:
       host: ${REDIS_HOST:redis}
       port: ${REDIS_PORT:6379}
+ledgercore:
+  mongodb:
+    transactions:
+      enabled: ${MONGODB_TRANSACTIONS_ENABLED:true}
 logging:
   level:
     com.ledgercore: INFO
