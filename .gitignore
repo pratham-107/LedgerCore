@@ -32,9 +32,18 @@ build/
 ### VS Code ###
 .vscode/
 
-### Environment ###
+### Environment & Local Data ###
 .env
+.env*.local
+.data/
+
+### Frontend Client ###
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/.vite/
 
 ### OS ###
 .DS_Store
 Thumbs.db
+
