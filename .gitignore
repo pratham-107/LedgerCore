@@ -37,6 +37,28 @@ build/
 .env*.local
 .data/
 
+### Server: Logs & Runtime Artifacts ###
+logs/
+*.log
+hs_err_pid*
+replay_pid*
+*.hprof
+heapdump*.hprof
+
+### Server: Local Config Profiles & Secrets ###
+application-local.yml
+application-local.yaml
+application-local.properties
+application-*.local.yml
+application-*.local.yaml
+application-*.local.properties
+
+### Server: Build Artifacts ###
+dependency-reduced-pom.xml
+.flattened-pom.xml
+out/
+.attach_pid*
+
 ### Frontend Client ###
 frontend/node_modules/
 frontend/dist/
