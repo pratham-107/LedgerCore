@@ -7,10 +7,15 @@ spring:
       uri: ${MONGODB_URI:mongodb://mongo:27017/ledgercore}
     redis:
       url: ${REDIS_URL:redis://redis:6379}
+      client-type: jedis
 ledgercore:
   mongodb:
     transactions:
       enabled: ${MONGODB_TRANSACTIONS_ENABLED:true}
+management:
+  health:
+    redis:
+      enabled: false
 logging:
   level:
     com.ledgercore: INFO
